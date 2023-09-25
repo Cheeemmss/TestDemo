@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>-->
+    <title>Login</title>
+    <script src="/js/jQuery3.6.0.js"></script>
+    <script>
+        $(function () {
+            $(".submit_input").click(function () {
+                $.post(
+                    "/user/login.do",
+                    {
+                        "username" : $(".username_input").val(),
+                        "password" : $(".password_input").val(),
+                        "verification":$(".verification_input").val(),
+                    },
+                    function(data){
+                        //要最先校验验证码
+                        if(data.code === "30002") {
+                            alert(data.msg)
+                            //验证码错误之后要自动重新获取一张验证码来(因为上次验证过程中session中的验证码字符串已经被remove了,若继续用这原来那张(null)则永远都匹配不上)
+                            $("#V_img").attr("src","/kaptcha.jpg")
+                        }else {
+                            if(data.code === "200"){
+                                window.location.href = '/user/userLoginSuccess.html'
+                            }else {
+                                alert(data.msg)
+                                $("#V_img").attr("src","/kaptcha.jpg")//同理
+                            }
+                        }
+                    },
+                    'json'
+                )
+            })
+        })
+    </script>
+</head>
+<body>
+<form>
+    <div class="username_box">
+      username <input type="text" name="username" class="username_input">
+    </div>
+    <div class="password_box">
+      password  <input type="password" name="password" class="password_input">
+    </div>
+    <div class="Verification_box">
+        Verification code  <input type="text" name="verification" class="verification_input">
+        <div class="Verification_img"><img id="V_img" src="/kaptcha.jpg" alt="验证码" width="93px" height="40px"></div>
+    </div>
+    <div class="submit_box">
+        <input type="button" value="Login" class="submit_input">
+    </div>
+</form>
+</body>
+</html>

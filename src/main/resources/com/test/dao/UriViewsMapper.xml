@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.UriViewsMapper">
+
+    <update id="updateUriView">
+        UPDATE uri_views
+        SET view_num = view_num + 1
+        WHERE
+            uri = #{uri}
+    </update>
+
+    <select id="selectByUri" resultType="com.test.enties.UriViews">
+        select id,uri
+        from uri_views
+        where
+            uri = #{uri}
+    </select>
+
+    <select id="selectAll" resultType="com.test.enties.UriViews">
+        select uri,view_num viewNum
+        from uri_views
+    </select>
+
+    <insert id="insertUriView">
+        INSERT INTO uri_views
+        VALUES
+            (NULL,#{uri}, 1);
+    </insert>
+
+</mapper>
